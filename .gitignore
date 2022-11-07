@@ -1,3 +1,11 @@
 .env
 .vscode 
 .python-version
+
+static/.DS_Store
+
+migrations/
+*/migrations/
+__pycache__/
+*.py[cod]
+*$py.class
