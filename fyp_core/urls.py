@@ -20,5 +20,5 @@ from ticket_resolution.views import *
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-     path(r'', EmpView.as_view(), name="app_home"),
+    path(r'', login, name="home"),
 ]
