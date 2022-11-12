@@ -26,11 +26,10 @@ def login(request):
                     })
             else:
                 if user.emp_uid == username:
-                    return render(request, "ticket_resolution/login.html")
+                    messages.error(request, 'Incorrect Password.')
                 else:
-                    return render(request, "ticket_resolution/login.html")
+                    messages.error(request, 'Username does not exists.')
         except:
-            return render(request, "ticket_resolution/login.html")
+            messages.error(request, 'An Error Occurred.')
         
-    else:  
-        return render(request, "ticket_resolution/login.html")
+    return render(request, "ticket_resolution/login.html")
