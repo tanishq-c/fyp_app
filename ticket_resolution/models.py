@@ -9,11 +9,10 @@ class Employee(models.Model):
     emp_uid = models.CharField(max_length=255, null=False, blank=True) 
     emp_pwd = models.CharField(max_length=255, null=False, blank=True)
     dept_name = models.CharField(max_length=255, null=False, blank=True)
-    ticket_count = models.IntegerField(null=False, default=0)
 
 class Tickets(models.Model):
     cust_email = models.CharField(max_length=255, null=False, blank=True)
-    cust_query = models.CharField(max_length=2048, null=False, blank=True)
+    cust_query = models.CharField(max_length=5000, null=False, blank=True)
     dept_name = models.CharField(max_length=255, null=False, blank=True)
     status = models.CharField(max_length=20, null=False, blank=False, default='Pending')
     created_at = models.DateTimeField(auto_now_add=True)
@@ -21,6 +20,6 @@ class Tickets(models.Model):
 
 class CustQuery(models.Model):
     cust_email = models.CharField(max_length=255, null=False, blank=True)
-    cust_query = models.CharField(max_length=2048, null=False, blank=True)
+    cust_query = models.CharField(max_length=5000, null=False, blank=True)
     status = models.CharField(max_length=20, null=False, blank=False, default='Pending')
     created_at = models.DateTimeField(auto_now_add=True)

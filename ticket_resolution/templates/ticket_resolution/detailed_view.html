@@ -47,55 +47,6 @@
               <i class="mdi mdi-logout me-2 text-primary"></i> Sign-out </a>
           </div>
         </li>
-        <li class="nav-item dropdown">
-          <a class="nav-link count-indicator dropdown-toggle" id="notificationDropdown" href="#"
-            data-bs-toggle="dropdown">
-            <i class="mdi mdi-bell-outline"></i>
-            <span class="count-symbol bg-danger"></span>
-          </a>
-          <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list"
-            aria-labelledby="notificationDropdown">
-            <h6 class="p-3 mb-0">Notifications</h6>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item preview-item">
-              <div class="preview-thumbnail">
-                <div class="preview-icon bg-success">
-                  <i class="mdi mdi-calendar"></i>
-                </div>
-              </div>
-              <div class="preview-item-content d-flex align-items-start flex-column justify-content-center">
-                <h6 class="preview-subject font-weight-normal mb-1">Event today</h6>
-                <p class="text-gray ellipsis mb-0"> Just a reminder that you have an event today </p>
-              </div>
-            </a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item preview-item">
-              <div class="preview-thumbnail">
-                <div class="preview-icon bg-warning">
-                  <i class="mdi mdi-settings"></i>
-                </div>
-              </div>
-              <div class="preview-item-content d-flex align-items-start flex-column justify-content-center">
-                <h6 class="preview-subject font-weight-normal mb-1">Settings</h6>
-                <p class="text-gray ellipsis mb-0"> Update dashboard </p>
-              </div>
-            </a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item preview-item">
-              <div class="preview-thumbnail">
-                <div class="preview-icon bg-info">
-                  <i class="mdi mdi-link-variant"></i>
-                </div>
-              </div>
-              <div class="preview-item-content d-flex align-items-start flex-column justify-content-center">
-                <h6 class="preview-subject font-weight-normal mb-1">Launch Admin</h6>
-                <p class="text-gray ellipsis mb-0"> New admin wow! </p>
-              </div>
-            </a>
-            <div class="dropdown-divider"></div>
-            <h6 class="p-3 mb-0 text-center">See all notifications</h6>
-          </div>
-        </li>
         <li class="nav-item nav-logout d-none d-lg-block">
           <a class="nav-link" href="{% url 'home' %}">
             <i class="mdi mdi-power"></i>
@@ -163,10 +114,10 @@
                 <hr>
                 <div class="row">
                   <div class="col-sm-9">
-                    Tracking ID:
+                    Email-ID:
                   </div>
                   <div class="col-sm-3">
-                    {{ ticket.tracking_id }}
+                    {{ ticket.cust_email }}
                   </div>
                 </div>
               </div>
@@ -179,14 +130,10 @@
               <div class="template-demo">
                 <div class="row">
                   <div class="col">
-                    <h4>Subject</h4>
-                    <p>
-                      {{ticket.metadata.subject}}
-                    </p>
                     <h4>Description</h4>
-                    <div style="height: 150px; overflow: auto;">
+                    <div style="height: 200px; overflow: auto;">
                       <p>
-                        {{ ticket.metadata.description}}
+                        {{ ticket.cust_query}}
                       </p>
                     </div>
                   </div>
@@ -197,64 +144,79 @@
         </div>
       </div>
       <div class="col-md-13 grid-margin">
-        <div class="card">
-          <div class="card-body">
-            <div class="template-demo">
-              <div class="row">
-                <div class="col">
-                  <label for="">Update Status:</label> <br> <br>
-                  <label for="">Forward to Department</label>
+        <form action="" method="POST" class="forms-sample">
+          {% csrf_token %}
+          <div class="row">
+            <div class="col">
+              <div class="form-group">
+                <div class="col-mb-13">
+                  <h5>Update Status</h5>
+                  <select class="form-control" name="up_status">
+                    {% if ticket.status == "Pending" %}
+                    <option value="Pending" selected>Pending</option>
+                    {% else %}
+                    <option value="Pending">Pending</option>
+                    {% endif %}
+                    {% if ticket.status == "In-Progress" %}
+                    <option value="In-Progress" selected>In-Progress</option>
+                    {% else %}
+                    <option value="In-Progress">In-Progress</option>
+                    {% endif %}
+                    {% if ticket.status == "Completed" %}
+                    <option value="Completed" selected>Completed</option>
+                    {% else %}
+                    <option value="Completed">Completed</option>
+                    {% endif %}
+                    {% if ticket.status == "Rejected" %}
+                    <option value="Rejected" selected>Rejected</option>
+                    {% else %}
+                    <option value="Rejected">Rejected</option>
+                    {% endif %}
+                  </select>
                 </div>
-                <div class="col">
-                  <div class="btn-group dropright">
-                    <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown"
-                      aria-haspopup="true" aria-expanded="false">
-                      {{ticket.status}}
-                    </button>
-                    <div class="dropdown-menu">
-                      <a class="dropdown-item" href="#">Pending</a>
-                      <a class="dropdown-item" href="#">Completed</a>
-                      <a class="dropdown-item" href="#">In-Progress</a>
-                      <a class="dropdown-item" href="#">Rejected</a>
-                    </div>
-                  </div> <br> <br>
-                  <div class="btn-group dropright">
-                    <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown"
-                      aria-haspopup="true" aria-expanded="false">
-                      Student Loan
-                    </button>
-                    <div class="dropdown-menu">
-                      <a class="dropdown-item" href="#">Money Transfer</a>
-                      <a class="dropdown-item" href="#">Prepaid Card</a>
-                      <a class="dropdown-item" href="#">Mortgage</a>
-                      <a class="dropdown-item" href="#">Debt Collection</a>
-                    </div>
-                  </div>
+                <div class="mt-2">
+                  <h5>Update Department</h5>
+                  <select class="form-control" name="up_dept">
+                    {% if ticket.dept_name == "credit_card" %}
+                    <option value="credit_card" selected>Credit Card</option>
+                    {% else %}
+                    <option value="credit_card">Credit Card</option>
+                    {% endif %}
+                    {% if ticket.dept_name == "credit_report" %}
+                    <option value="credit_report" selected>Credit Report</option>
+                    {% else %}
+                    <option value="credit_report">Credit Report</option>
+                    {% endif %}
+                    {% if ticket.dept_name == "retail_banking" %}
+                    <option value="retail_banking" selected>Retail Banking</option>
+                    {% else %}
+                    <option value="retail_banking">Retail Banking</option>
+                    {% endif %}
+                    {% if ticket.dept_name == "debt_collection" %}
+                    <option value="debt_collection" selected>Debt Collection</option>
+                    {% else %}
+                    <option value="debt_collection">Debt Collection</option>
+                    {% endif %}
+                    {% if ticket.dept_name == "loans" %}
+                    <option value="loans" selected>Loans</option>
+                    {% else %}
+                    <option value="loans">Loans</option>
+                    {% endif %}
+                  </select>
                 </div>
-                <div class="col">
-                  <form action="" class="forms-sample">
-                    <div class="col-sm">
-                      <label for="">Comments</label>
-                      <textarea class="form-control" cols="1" rows="3"></textarea>
-                    </div>
-                    <br>
-                    <div class="row">
-                      <button class="btn btn-light">Cancel</button>
-                      <button type="Submit" class="btn btn-gradient-primary me-2">Submit</button>
-                    </div>
-                  </form>
-                </div>
-
+              </div>
+            </div>
+            <div class="col">
+              <h5>Comments:</h5>
+              <textarea name="comments" class="form-control" id="comments" rows="5"></textarea>
+              <div class="mt-2">
+                <button type="Submit" class="btn btn-gradient-primary btn-rounded btn-fw">Update</button>
               </div>
             </div>
           </div>
-        </div>
+        </form>
       </div>
     </div>
-    <div class="row">
-
-    </div>
-  </div>
   </div>
 
   <script src="{% static 'vendors/js/vendor.bundle.base.js' %}"></script>

@@ -1,8 +1,10 @@
 from django.shortcuts import render
 from django.contrib import messages
+from django.shortcuts import redirect
 
 from .models import *
 from .task import *
+from .email import *
 
 def login(request):
     if request.method=="POST":
@@ -16,10 +18,6 @@ def login(request):
                 completed = tickets.filter(status='Completed')
                 in_progress = tickets.filter(status='In-Progress')
                 rejected = tickets.filter(status='Rejected')
-                print(user.dept_name)
-                print(tickets)
-                print(pending)
-                print(completed)
                 return render(request, 'ticket_resolution/ticket_resolution.html', {
                     'user': user,
                     'ticket' : tickets,
@@ -40,6 +38,13 @@ def login(request):
 
 def detailedView(request, id):
     ticket = Tickets.objects.filter(id=id).first()
+    if request.method=="POST":
+        comments = request.POST['comments']
+        ticket.status = request.POST['up_status']
+        ticket.dept_name = request.POST['up_dept']
+        ticket.save()
+        send_email(ticket.id, ticket.cust_email, comments, ticket.status, ticket.dept_name)
+        return redirect('details', id=id)
     return render(request, "ticket_resolution/detailed_view.html", {
         'ticket' : ticket,
     })
