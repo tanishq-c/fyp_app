@@ -9,3 +9,9 @@ migrations/
 __pycache__/
 *.py[cod]
 *$py.class
+
+*.h5
+*.pickle
+
+celerybeat-schedule
+*.dump

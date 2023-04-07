@@ -9,12 +9,22 @@
   <link rel="stylesheet" href="{% static 'vendors/mdi/css/materialdesignicons.min.css' %}">
   <link rel="stylesheet" href="{% static 'vendors/css/vendor.bundle.base.css' %}">
   <link rel="stylesheet" href="{% static 'css/style.css' %}">
-  <link rel="shortcut icon" href="{% static 'images/favicon.ico' %}"/>
+  <link rel="shortcut icon" href="{% static 'images/favicon.ico' %}" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
     integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 </head>
 
+<style>
+  hr {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    border: 0;
+    border-top: 0.25px solid rgba(0, 0, 0, 0.1);
+  }
+</style>
+
 <body>
+
   <nav class="navbar p-0 fixed-top d-flex flex-row">
     <div style="width: 100%;" class="navbar-menu-wrapper d-flex align-items-stretch">
       <ul class="navbar-nav navbar-nav-right">
@@ -102,110 +112,151 @@
     <div class="content-wrapper">
       <div class="page-header">
         <h3 class="page-title">
-          <span class="page-title-icon bg-gradient-primary text-white me-2">
-            <i class="mdi mdi-home"></i>
-          </span>Welcome, {{ user.emp_name }}.
+          Ticket Details
         </h3>
       </div>
       <div class="row">
-        <div class="col-md-4 stretch-card grid-margin">
-          <div class="card bg-gradient-warning card-img-holder text-white">
+        <div class="col-md-6 grid-margin stretch-card">
+          <div class="card">
             <div class="card-body">
-              <img src="{% static 'images/dashboard/circle.svg' %}" class="card-img-absolute" alt="circle-image" />
-              <h4 class="font-weight-normal mb-3">Pending Tickets <i
-                  class="mdi mdi-chart-line mdi-24px float-right"></i>
-              </h4>
-              <h2 class="mb-5">{{ pending|length }}</h2>
+              <div class="template-demo">
+                <div class="row">
+                  <div class="col-sm-9">Ticket ID</div>
+                  <div class="col-sm-3">{{ticket.id}}</div>
+                </div>
+                <hr>
+                <div class="row">
+                  <div class="col-sm-9">Ticket Status</div>
+                  <div class="col-sm-3">
+                    {% if ticket.status == "Pending" %}
+                    <label class="badge badge-gradient-warning">PENDING</label>
+                    {% endif %}
+                    {% if ticket.status == "In-Progress"  %}
+                    <label class="badge badge-gradient-info">IN PROGRESS</label>
+                    {% endif %}
+                    {% if ticket.status == "Completed"  %}
+                    <label class="badge badge-gradient-success">COMPLETED</label>
+                    {% endif %}
+                    {% if ticket.status == "Rejected" %}
+                    <label class="badge badge-gradient-danger">REJECTED</label>
+                    {% endif %}
+                  </div>
+                </div>
+                <hr>
+                <div class="row">
+                  <div class="col-sm-9">
+                    Created On:
+                  </div>
+                  <div class="col-sm-3">
+                    {{ ticket.created_at }}
+                  </div>
+                </div>
+                <hr>
+                <div class="row">
+                  <div class="col-sm-9">
+                    Last Updated:
+                  </div>
+                  <div class="col-sm-3">
+                    {{ ticket.updated_at }}
+                  </div>
+                </div>
+                <hr>
+                <div class="row">
+                  <div class="col-sm-9">
+                    Tracking ID:
+                  </div>
+                  <div class="col-sm-3">
+                    {{ ticket.tracking_id }}
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-        <div class="col-md-4 stretch-card grid-margin">
-          <div class="card bg-gradient-success card-img-holder text-white">
+        <div class="col-md-6 grid-margin stretch-card">
+          <div class="card">
             <div class="card-body">
-              <img src="{% static 'images/dashboard/circle.svg' %}" class="card-img-absolute" alt="circle-image" />
-              <h4 class="font-weight-normal mb-3">Completed Tickets <i
-                  class="mdi mdi-bookmark-outline mdi-24px float-right"></i>
-              </h4>
-              <h2 class="mb-5">{{ completed|length }}</h2>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4 stretch-card grid-margin">
-          <div class="card bg-gradient-info card-img-holder text-white">
-            <div class="card-body">
-              <img src="{% static 'images/dashboard/circle.svg' %}" class="card-img-absolute" alt="circle-image" />
-              <h4 class="font-weight-normal mb-3">In Progress Tickets <i
-                  class="mdi mdi-bookmark-outline mdi-24px float-right"></i>
-              </h4>
-              <h2 class="mb-5">{{ in_progress|length }}</h2>
+              <div class="template-demo">
+                <div class="row">
+                  <div class="col">
+                    <h4>Subject</h4>
+                    <p>
+                      {{ticket.metadata.subject}}
+                    </p>
+                    <h4>Description</h4>
+                    <div style="height: 150px; overflow: auto;">
+                      <p>
+                        {{ ticket.metadata.description}}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
-      <div class="row">
-        <div class="col-12 grid-margin">
-          <div class="card">
-            <div class="card-body">
-              <div class="d-flex p-1">
-                <ul class="nav nav-tabs card-header-tabs" id="bologna-list" role="tablist">
-                  <li class="nav-item">
-                    <a class="nav-link active" href="#description" role="tab" aria-controls="description"
-                      aria-selected="true">
-                      <h6 class="card-title">Assigned Tickets</h6>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="#history" role="tab" aria-controls="history" aria-selected="false">
-                      <h6 class="card-title">Department Tickets</h6>
-                    </a>
-                  </li>
-                </ul>
-              </div>
-              <div class="table-responsive">
-                <table class="table">
-                  <thead>
-                    <tr>
-                      <th>Ticket ID</th>
-                      <th> Email-ID </th>
-                      <th> Description </th>
-                      <th> Last Updated </th>
-                      <th> Status </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {% for obj in ticket %}
-                    <tr style="cursor: pointer" id="{{ obj.id }}" onclick="reply_click(this.id)">
-                      <td>
-                        {{ obj.id }}
-                      </td>
-                      <td>{{ obj.cust_email }}</td>
-                      <td>{{ obj.cust_query }}</td>
-                      <td>{{ obj.updated_at }}</td>
-                      <td>
-                        {% if obj.status == "Pending" %}
-                        <label class="badge badge-gradient-warning">PENDING</label>
-                        {% endif %}
-                        {% if obj.status == "In-Progress"  %}
-                        <label class="badge badge-gradient-info">IN PROGRESS</label>
-                        {% endif %}
-                        {% if obj.status == "Completed"  %}
-                        <label class="badge badge-gradient-success">COMPLETED</label>
-                        {% endif %}
-                        {% if obj.status == "Rejected" %}
-                        <label class="badge badge-gradient-danger">REJECTED</label>
-                        {% endif %}
-                      </td>
-                    </tr>
-                    {% endfor %}
-                  </tbody>
-                </table>
+      <div class="col-md-13 grid-margin">
+        <div class="card">
+          <div class="card-body">
+            <div class="template-demo">
+              <div class="row">
+                <div class="col">
+                  <label for="">Update Status:</label> <br> <br>
+                  <label for="">Forward to Department</label>
+                </div>
+                <div class="col">
+                  <div class="btn-group dropright">
+                    <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown"
+                      aria-haspopup="true" aria-expanded="false">
+                      {{ticket.status}}
+                    </button>
+                    <div class="dropdown-menu">
+                      <a class="dropdown-item" href="#">Pending</a>
+                      <a class="dropdown-item" href="#">Completed</a>
+                      <a class="dropdown-item" href="#">In-Progress</a>
+                      <a class="dropdown-item" href="#">Rejected</a>
+                    </div>
+                  </div> <br> <br>
+                  <div class="btn-group dropright">
+                    <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown"
+                      aria-haspopup="true" aria-expanded="false">
+                      Student Loan
+                    </button>
+                    <div class="dropdown-menu">
+                      <a class="dropdown-item" href="#">Money Transfer</a>
+                      <a class="dropdown-item" href="#">Prepaid Card</a>
+                      <a class="dropdown-item" href="#">Mortgage</a>
+                      <a class="dropdown-item" href="#">Debt Collection</a>
+                    </div>
+                  </div>
+                </div>
+                <div class="col">
+                  <form action="" class="forms-sample">
+                    <div class="col-sm">
+                      <label for="">Comments</label>
+                      <textarea class="form-control" cols="1" rows="3"></textarea>
+                    </div>
+                    <br>
+                    <div class="row">
+                      <button class="btn btn-light">Cancel</button>
+                      <button type="Submit" class="btn btn-gradient-primary me-2">Submit</button>
+                    </div>
+                  </form>
+                </div>
+
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
+    <div class="row">
+
+    </div>
   </div>
+  </div>
+
   <script src="{% static 'vendors/js/vendor.bundle.base.js' %}"></script>
   <script src="{% static 'vendors/chart.js/Chart.min.js' %}"></script>
   <script src="{% static 'js/jquery.cookie.js' %}" type="text/javascript"></script>
@@ -226,14 +277,11 @@
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
     integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous">
   </script>
-<script type="text/javascript">
-  function reply_click(clicked_id)
-  {
-    location.href = "/details/" + clicked_id;
-  }
-</script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
     integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous">
+  </script>
+  <script>
+    $('.dropdown-toggle').dropdown('update')
   </script>
 </body>
 
